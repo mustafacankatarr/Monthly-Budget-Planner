@@ -1,7 +1,7 @@
 """Monthly Budget Planner.
 
-Reads a list of monthly expenses from an external file and reports how much
-was spent in total.
+Reads a list of monthly expenses from an external file and reports the total
+spending together with a per-category breakdown.
 """
 
 INPUT_FILE = "expenses.txt"
@@ -25,9 +25,18 @@ def total_spending(expenses):
     return sum(amount for _, amount in expenses)
 
 
+def build_breakdown(expenses):
+    """Return a list of formatted 'category: amount' lines."""
+    return [f"  {category}: {amount:.2f}" for category, amount in expenses]
+
+
 def main():
     expenses = read_expenses(INPUT_FILE)
     total = total_spending(expenses)
+
+    print("Spending by category:")
+    for line in build_breakdown(expenses):
+        print(line)
     print(f"Total spending: {total:.2f}")
 
 
