@@ -1,0 +1,10 @@
+# Generated output file - rebuilt on every run, so it is not tracked
+report.txt
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Logs and temporary files
+*.log
+*.tmp
