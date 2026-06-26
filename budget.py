@@ -36,9 +36,13 @@ def total_spending(expenses):
     return sum(amount for _, amount in expenses)
 
 
-def build_breakdown(expenses):
-    """Return a list of formatted 'category: amount' lines."""
-    return [f"  {category}: {amount:.2f}" for category, amount in expenses]
+def build_breakdown(expenses, total):
+    """Return category lines sorted by amount, each with its share of the total."""
+    lines = []
+    for category, amount in sorted(expenses, key=lambda item: item[1], reverse=True):
+        share = (amount / total * 100) if total else 0
+        lines.append(f"  {category:<14} {amount:>9.2f}  ({share:4.1f}%)")
+    return lines
 
 
 def build_report(expenses):
@@ -47,10 +51,10 @@ def build_report(expenses):
     emergency_fund = total * BUFFER_RATE
 
     lines = ["Monthly Budget Report", "=====================", "", "Spending by category:"]
-    lines.extend(build_breakdown(expenses))
+    lines.extend(build_breakdown(expenses, total))
     lines.append("")
-    lines.append(f"Total spending:        {total:.2f}")
-    lines.append(f"Emergency fund ({BUFFER_RATE:.0%}):   {emergency_fund:.2f}")
+    lines.append(f"Total spending:             {total:>9.2f}")
+    lines.append(f"Emergency fund ({BUFFER_RATE:>4.0%}):       {emergency_fund:>9.2f}")
     return "\n".join(lines)
 
 
