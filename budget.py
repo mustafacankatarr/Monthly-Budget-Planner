@@ -1,11 +1,15 @@
 """Monthly Budget Planner.
 
-Reads monthly expenses from an external file, calculates the total spending and
-a recommended emergency fund, and writes a formatted report to an output file.
+Reads a list of monthly expenses from an external file, analyses the spending
+and writes a formatted report to an output file. Built incrementally to
+practise a professional Git workflow (branches, merges and a clean history).
 """
 
 INPUT_FILE = "expenses.txt"
 OUTPUT_FILE = "report.txt"
+
+# Number of days used to estimate the average daily spending.
+DAYS_IN_MONTH = 30
 
 # Share of monthly spending to set aside as an emergency fund.
 BUFFER_RATE = 0.10
@@ -36,6 +40,11 @@ def total_spending(expenses):
     return sum(amount for _, amount in expenses)
 
 
+def top_category(expenses):
+    """Return the (category, amount) pair with the highest spending."""
+    return max(expenses, key=lambda item: item[1])
+
+
 def build_breakdown(expenses, total):
     """Return category lines sorted by amount, each with its share of the total."""
     lines = []
@@ -49,12 +58,16 @@ def build_report(expenses):
     """Build the full report text as a single string."""
     total = total_spending(expenses)
     emergency_fund = total * BUFFER_RATE
+    daily_average = total / DAYS_IN_MONTH
+    biggest_category, biggest_amount = top_category(expenses)
 
     lines = ["Monthly Budget Report", "=====================", "", "Spending by category:"]
     lines.extend(build_breakdown(expenses, total))
     lines.append("")
     lines.append(f"Total spending:             {total:>9.2f}")
+    lines.append(f"Average daily spending:     {daily_average:>9.2f}")
     lines.append(f"Emergency fund ({BUFFER_RATE:>4.0%}):       {emergency_fund:>9.2f}")
+    lines.append(f"Biggest expense:            {biggest_category} ({biggest_amount:.2f})")
     return "\n".join(lines)
 
 
