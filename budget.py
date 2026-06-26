@@ -12,15 +12,22 @@ BUFFER_RATE = 0.10
 
 
 def read_expenses(path):
-    """Read 'category,amount' lines from the input file into a list of tuples."""
+    """Read 'category,amount' lines from the input file into a list of tuples.
+
+    Blank lines and lines starting with '#' are ignored, and malformed lines are
+    skipped with a warning so a single typo cannot crash the whole report.
+    """
     expenses = []
     with open(path, "r", encoding="utf-8") as f:
-        for line in f:
+        for number, line in enumerate(f, start=1):
             line = line.strip()
-            if not line:
+            if not line or line.startswith("#"):
                 continue
-            category, amount = line.split(",")
-            expenses.append((category.strip(), float(amount)))
+            try:
+                category, amount = line.split(",")
+                expenses.append((category.strip(), float(amount)))
+            except ValueError:
+                print(f"Skipping malformed line {number}: {line!r}")
     return expenses
 
 
@@ -49,8 +56,11 @@ def build_report(expenses):
 
 def main():
     expenses = read_expenses(INPUT_FILE)
-    report = build_report(expenses)
+    if not expenses:
+        print("No expenses found. Please add entries to", INPUT_FILE)
+        return
 
+    report = build_report(expenses)
     with open(OUTPUT_FILE, "w", encoding="utf-8") as f:
         f.write(report)
 

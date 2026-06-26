@@ -1,6 +1,8 @@
+# Monthly expenses: category,amount
 Rent,1200
 Groceries,450
 Transport,200
 Utilities,180
 Entertainment,120
 Dining Out,95
+Subscriptions,60
