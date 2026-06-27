@@ -12,7 +12,7 @@ OUTPUT_FILE = "report.txt"
 DAYS_IN_MONTH = 30
 
 # Share of monthly spending to set aside as an emergency fund.
-BUFFER_RATE = 0.10
+BUFFER_RATE = 0.20
 
 
 def read_expenses(path):
